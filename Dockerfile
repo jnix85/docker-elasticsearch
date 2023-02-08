@@ -18,8 +18,8 @@ sleep 10; done; \
     (exit $exit_code)
 
 # Provide a non-root user to run the process.
-RUN groupadd --gid 1000 logstash && \
-    adduser --uid 1000 --gid 1000 \
+RUN groupadd --gid 9200 logstash && \
+    adduser --uid 9200 --gid 9200 \
        --home /usr/share/logstash --no-create-home \
       logstash
 
@@ -55,7 +55,7 @@ COPY env2yaml/env2yaml /usr/local/bin/
 COPY bin/docker-entrypoint /usr/local/bin/
 RUN chmod 0755 /usr/local/bin/docker-entrypoint
 
-USER 1000
+USER 9200
 
 EXPOSE 9600 5044
 
