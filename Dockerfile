@@ -24,7 +24,7 @@ RUN mkdir /usr/share/kibana
 WORKDIR /usr/share/kibana
 RUN tar --strip-components=1 -zxf /tmp/kibana.tar.gz
 # Ensure that group permissions are the same as user permissions.
-# This will help when relying on GID-0 to run Kibana, rather than UID-1000.
+# This will help when relying on GID-0 to run Kibana, rather than UID-9200.
 # OpenShift does this, for example.
 # REF: https://docs.openshift.org/latest/creating_images/guidelines.html
 RUN chmod -R g=u /usr/share/kibana
@@ -77,7 +77,7 @@ RUN echo "5dcd1c336cc9344cb77c03a0cd8982ca8a7dc97d620fd6c9c434e02dcb1ceeb3  /usr
 RUN fc-cache -v
 
 # Bring in Kibana from the initial stage.
-COPY --from=builder --chown=1000:0 /usr/share/kibana /usr/share/kibana
+COPY --from=builder --chown=9200:0 /usr/share/kibana /usr/share/kibana
 WORKDIR /usr/share/kibana
 RUN ln -s /usr/share/kibana /opt/kibana
 
@@ -85,7 +85,7 @@ ENV ELASTIC_CONTAINER true
 ENV PATH=/usr/share/kibana/bin:$PATH
 
 # Set some Kibana configuration defaults.
-COPY --chown=1000:0 config/kibana.yml /usr/share/kibana/config/kibana.yml
+COPY --chown=9200:0 config/kibana.yml /usr/share/kibana/config/kibana.yml
 
 # Add the launcher/wrapper script. It knows how to interpret environment
 # variables and translate them to Kibana CLI options.
@@ -99,8 +99,8 @@ RUN chmod g+ws /usr/share/kibana && \
 RUN find / -xdev -perm -4000 -exec chmod u-s {} +
 
 # Provide a non-root user to run the process.
-RUN groupadd --gid 1000 kibana && \
-    useradd --uid 1000 --gid 1000 -G 0 \
+RUN groupadd --gid 9200 kibana && \
+    useradd --uid 9200 --gid 9200 -G 0 \
       --home-dir /usr/share/kibana --no-create-home \
       kibana
 
