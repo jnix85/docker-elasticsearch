@@ -95,8 +95,8 @@ RUN yes no | dpkg-reconfigure dash && \
     done; \
     exit $exit_code
 
-RUN groupadd -g 1000 elasticsearch && \
-    adduser --uid 1000 --gid 1000 --home /usr/share/elasticsearch elasticsearch && \
+RUN groupadd -g 9200 elasticsearch && \
+    adduser --uid 9200 --gid 9200 --home /usr/share/elasticsearch elasticsearch && \
     adduser elasticsearch root && \
     chown -R 0:0 /usr/share/elasticsearch
 
